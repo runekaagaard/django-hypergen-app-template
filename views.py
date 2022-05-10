@@ -23,7 +23,7 @@ def base_template():
             link("https://unpkg.com/simpledotcss@2.0.7/simple.min.css")  # include all you html5 boilerplate.
         with body():  # warning, don't set the target_id directly on the body element, does not work!
             h1("Hello {{ app_name }}")
-            p(i("Congratulations on running your very first Django Hypergen Project!")
+            p(i("Congratulations on installing your very first Django Hypergen app!")
              )  # elements can take elements.
 
             with div(id_="content"):  # see target_id below.
