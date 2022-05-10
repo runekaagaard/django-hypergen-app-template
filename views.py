@@ -34,7 +34,7 @@ def base_template():
             with ul():
                 li(
                     "Play around with the source at",
-                    code("./hypergen_first_app/views.py"),
+                    code("./{{ app_name }}/views.py"),
                     sep=" ",  # arguments are joined by a " " separator.
                 )
                 li("Read the", a("getting started", href="https://hypergen.it/gettingstarted/begin/"), "guide",
