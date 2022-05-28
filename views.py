@@ -1,10 +1,9 @@
+# Interesting stuff can be imported more precisely from the template, liveview and context modules. For now lets
+# get it all :)
+from hypergen.imports import *
+
 from contextlib import contextmanager
 import codecs
-
-from hypergen.core import *
-from hypergen.contrib import hypergen_view, hypergen_callback, NO_PERM_REQUIRED
-
-from django.templatetags.static import static
 
 # Templates - as your app grows you probably want to move them to a templates.py file.
 
@@ -18,15 +17,13 @@ def base_template():
         with head():
             if title:
                 title("Hello {{ app_name }}")  # arguments to elements becomes the html innerText of the element.
-            script(src=static(
-                "hypergen/hypergen.min.js"))  # keyword arguments becomes html attributes of the element.
             link("https://unpkg.com/simpledotcss@2.0.7/simple.min.css")  # include all you html5 boilerplate.
         with body():  # warning, don't set the target_id directly on the body element, does not work!
             h1("Hello {{ app_name }}")
             p(i("Congratulations on installing your very first Django Hypergen app!")
              )  # elements can take elements.
 
-            with div(id_="content"):  # see target_id below.
+            with div(id_="content"):  # see target_id below. Do NOT set the id_ on the body() tag!
                 # The html triggered inside your views will appear here.
                 yield
 
@@ -42,11 +39,12 @@ def base_template():
                 li("Check out the full", a("documentation", href="https://hypergen.it/documentation/"), sep=" ")
                 li("Drop by and", a("say hi", href="https://github.com/runekaagaard/django-hypergen/discussions"),
                    "- we would love to talk to you!", sep=" ")
-                li(
-                    "Submit ",
-                    a("bug reports and feature requests",
-                      href="https://github.com/runekaagaard/django-hypergen/issues"))
+                li("Submit ",
+                   a("bug reports and feature requests",
+                     href="https://github.com/runekaagaard/django-hypergen/issues"))  # kwargs becomes attributes.
                 li("Go crazy 24/7!")
+
+base_template.target_id = "content"  # Makes the base_template know where it's inner content is nested.
 
 def content_template(encrypted_message=None):
     """
@@ -63,7 +61,7 @@ def content_template(encrypted_message=None):
 
 # Views - one view normally have multiple callbacks.
 
-@hypergen_view(perm=NO_PERM_REQUIRED, base_template=base_template)
+@liveview(perm=NO_PERM_REQUIRED, base_template=base_template)
 def my_view(request):
     """
     Views renders html and binds frontend events to callbacks.
@@ -72,7 +70,7 @@ def my_view(request):
 
 # Callbacks - if you have a lot, move them to a callbacks.py file.
 
-@hypergen_callback(perm=NO_PERM_REQUIRED, target_id="content")
+@action(perm=NO_PERM_REQUIRED, target_id="content")
 def my_callback(request, message):
     """
     Callbacks processes frontend events.
