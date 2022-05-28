@@ -48,34 +48,34 @@ base_template.target_id = "content"  # Makes the base_template know where it's i
 
 def content_template(encrypted_message=None):
     """
-    This template is specific to your view and the callbacks belonging to it. Composes just like React functions.
+    This template is specific to your view and the actions belonging to it. Composes just like React functions.
     """
     p("Top secret agent? Encrypt your message with a super secret key:")
     input_(
         id_="message",
-        # call "my_callback" on each oninput event.
+        # call "my_action" on each oninput event.
         # callback() takes all normal python datatypes and hypergen html elements as input.
-        oninput=callback(my_callback, THIS),  # 'THIS' means the value of the element it self.
+        oninput=callback(my_action, THIS),  # 'THIS' means the value of the element it self.
     )
     pre(code(encrypted_message if encrypted_message else "Type something, dammit!"))
 
-# Views - one view normally have multiple callbacks.
+# Views - one view normally have multiple actions.
 
 @liveview(perm=NO_PERM_REQUIRED, base_template=base_template)
 def my_view(request):
     """
-    Views renders html and binds frontend events to callbacks.
+    Views renders html and binds frontend events to actions.
     """
     content_template()
 
-# Callbacks - if you have a lot, move them to a callbacks.py file.
+# Actions - if you have a lot, move them to a actions.py file.
 
 @action(perm=NO_PERM_REQUIRED, target_id="content")
-def my_callback(request, message):
+def my_action(request, message):
     """
-    Callbacks processes frontend events.
+    Actions processes frontend events.
     
-    This callback tells the frontend to put the output of content_template into the 'content' div.
+    This action tells the frontend to put the output of content_template into the 'content' div.
 
     The 'message' arg is the value of the <input> element.
     """
